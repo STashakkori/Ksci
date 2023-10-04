@@ -6,6 +6,7 @@ import org.nd4j.linalg.api.ndarray.INDArray
 import org.nd4j.linalg.factory.Nd4j
 import org.nd4j.linalg.inverse.InvertMatrix
 import org.nd4j.linalg.ops.transforms.Transforms
+import org.nd4j.linalg.eigen.Eigen
 
 class Matrix {
   fun add(matrix1: INDArray, matrix2: INDArray): INDArray {
@@ -70,7 +71,9 @@ class Matrix {
 
   fun covariance(data: INDArray): INDArray {
     val centered = data.sub(data.mean(0))
-    return (centered.transpose().mmul(centered)).div(data.rows().toDouble())
+    return (centered.transpose()
+                    .mmul(centered))
+                    .div(data.rows().toDouble())
   }
 
   fun elementsAdd(matrix1: INDArray, matrix2: INDArray): INDArray {
@@ -95,5 +98,13 @@ class Matrix {
     require(matrix1.shape().contentEquals(matrix2.shape()))
       { "elementsDivide: Matrix dimensions must match." }
     return matrix1.divi(matrix2)
+  }
+
+  fun eigenDecomp(matrix: INDArray): Pair<INDArray, INDArray> {
+    require(matrix.rows() == matrix.columns())
+      { "eigenDecomp: Matrix must be square." }
+    val copy = matrix.dup()
+    val eigen = Eigen.symmetricGeneralizedEigenvalues(copy, true)
+    return Pair(copy, eigen)
   }
 }
