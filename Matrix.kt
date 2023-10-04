@@ -7,7 +7,7 @@ import org.nd4j.linalg.factory.Nd4j
 import org.nd4j.linalg.inverse.InvertMatrix
 import org.nd4j.linalg.ops.transforms.Transforms
 
-class MatrixUtils {
+class Matrix {
   fun add(matrix1: INDArray, matrix2: INDArray): INDArray {
     require(matrix1.shape().contentEquals(matrix2.shape()))
       { "Matrix dimensions must match for addition." }
