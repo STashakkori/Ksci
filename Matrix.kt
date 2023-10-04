@@ -7,6 +7,7 @@ import org.nd4j.linalg.factory.Nd4j
 import org.nd4j.linalg.inverse.InvertMatrix
 import org.nd4j.linalg.ops.transforms.Transforms
 import org.nd4j.linalg.eigen.Eigen
+import org.nd4j.linalg.api.ops.impl.transforms.custom.Svd
 
 class Matrix {
   fun add(matrix1: INDArray, matrix2: INDArray): INDArray {
@@ -106,5 +107,15 @@ class Matrix {
     val copy = matrix.dup()
     val eigen = Eigen.symmetricGeneralizedEigenvalues(copy, true)
     return Pair(copy, eigen)
+  }
+
+  fun svd(matrix: INDArray): Triple<INDArray, INDArray, INDArray> {
+    val transposed = matrix.transpose()
+    val eigAAT = Eigen.symmetricGeneralizedEigenvalues(matrix.mmul(transposed), true)
+    val eigATA = Eigen.symmetricGeneralizedEigenvalues(transposed.mmul(matrix), true)
+    val u = eigAAT.getColumn(1) // eigVecs of ortho
+    val s = Transforms.sqrt(eigAAT.getColumn(0)) // eigVals of sqrt ortho
+    val v = eigATA.getColumn(1) // eigVecs of trans
+    return Triple(u, s, v)
   }
 }
