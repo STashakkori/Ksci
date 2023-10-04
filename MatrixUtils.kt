@@ -62,21 +62,14 @@ class MatrixUtils {
   }
 
   fun createMatrix(data: Array<DoubleArray>): INDArray {
-    val numRows = data.size
-    val numCols = data[0].size
-
-    val matrixData = Array(numRows) { DoubleArray(numCols) }
-
-    for (i in 0 until numRows) {
-      matrixData[i] = data[i]
-    }
-
+    val matrixData = Array(data.size) { DoubleArray(data[0].size) }
+    for (i in 0 until data.size)
+      { matrixData[i] = data[i] }
     return Nd4j.create(matrixData)
   }
 
   fun covarianceMatrix(data: INDArray): INDArray {
     val centered = data.sub(data.mean(0))
-    val covariance = (centered.transpose().mmul(centered)).div(data.rows().toDouble())
-    return covariance
+    return (centered.transpose().mmul(centered)).div(data.rows().toDouble())
   }
 }
