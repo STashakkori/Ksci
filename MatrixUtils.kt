@@ -41,7 +41,8 @@ class MatrixUtils {
   }
 
   fun determinant(matrix: INDArray): Double {
-    require(matrix.rows() == matrix.columns()) { "Matrix must be square for determinant calculation." }
+    require(matrix.rows() == matrix.columns())
+      { "Matrix must be square for determinant calculation." }
     return Transforms.log(Nd4j.diag(matrix)).sumNumber().toDouble()
   }
 
@@ -63,8 +64,7 @@ class MatrixUtils {
 
   fun createMatrix(data: Array<DoubleArray>): INDArray {
     val matrixData = Array(data.size) { DoubleArray(data[0].size) }
-    for (i in 0 until data.size)
-      { matrixData[i] = data[i] }
+    for (i in 0 until data.size) { matrixData[i] = data[i] }
     return Nd4j.create(matrixData)
   }
 
